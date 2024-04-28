@@ -1,0 +1,64 @@
+﻿@model List<WebGSB.Models.Metier.Invitation>
+
+@{
+    ViewBag.Title = "Liste des Activité";
+    Layout = "~/Views/Shared/_LayoutGSB.cshtml";
+}
+
+<div class="container">
+    <h1>Liste des Activités</h1>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID Activité Compl</th>
+                    <th>Date Activité</th>
+                    <th>Lieu Activité</th>
+                    <th>Thème Activité</th>
+                    <th>Motif Activité</th>
+                    <th>Modifier</th>
+                    <th>Supprimer</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var invitation in Model)
+                {
+                    <tr>
+                        <td>@invitation.IdActiviteCompl</td>
+                        <td>@invitation.DateActivite.ToString("dd/MM/yyyy")</td>
+                        <td>@invitation.LieuActivite</td>
+                        <td>@invitation.ThemeActivite</td>
+                        <td>@invitation.MotifActivite</td>   
+                        <td>
+                            <a href="@Url.Action("Modifier", "Activiter", new { id = invitation.IdActiviteCompl })" class="btn btn-info">Modifier</a>
+                        </td>
+
+                        <td>
+                            <form method="post" action="@Url.Action("Supprimer", "Activiter", new { id = invitation.IdActiviteCompl })" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette activité ?');">
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Aucune invitation trouvée.</p>
+    }
+
+
+    <div class="mb-3">
+        <a href="@Url.Action("Ajouter", "Activiter")" class="btn btn-success">Ajouter une nouvelle activité</a>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-6 col-md-offset-3">
+            @Html.ActionLink("Retourner à l'accueil", "Index", "Home", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>

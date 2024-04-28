@@ -1,0 +1,67 @@
+﻿@model WebGSB.Models.Metier.ActiviteCompl
+
+@{
+    ViewBag.Title = "Modifier une Activité";
+    Layout = "~/Views/Shared/_LayoutGSB.cshtml";
+}
+
+<h2>Modifier une Activité</h2>
+@if (Model != null)
+{
+    @using (Html.BeginForm("Modifier", "Activiter", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="card col-8 mx-auto mt-5">
+            <div class="card-body">
+                <h3 class="card-title">Détails de l'Activité</h3>
+                <div class="form-horizontal">
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <!-- Id Activité -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="id-activite-input">ID Activité :</span>
+                        </div>
+                        @Html.EditorFor(model => model.IdActiviteCompl, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.IdActiviteCompl, "", new { @class = "text-danger" })
+                        <input name="IdActiviteCompl" type="hidden" value="@Model.IdActiviteCompl" />
+                    </div>
+                    <!-- Date Activité -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Date :</span>
+                        </div>
+                        <input name="DateActivite" type="date" class="form-control" value="@Model.DateActivite.ToString("yyyy-MM-dd")" required />
+                    </div>
+                    <!-- Lieu Activité -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Lieu :</span>
+                        </div>
+                        <input name="LieuActivite" type="text" class="form-control" value="@Model.LieuActivite" required />
+                    </div>
+                    <!-- Thème Activité -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Thème :</span>
+                        </div>
+                        <input name="ThemeActivite" type="text" class="form-control" value="@Model.ThemeActivite" required />
+                    </div>
+                    <!-- Motif Activité -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Motif :</span>
+                        </div>
+                        <textarea name="MotifActivite" class="form-control" rows="3" required>@Model.MotifActivite</textarea>
+                    </div>
+                    <!-- Button to submit the form -->
+                    <div class="form-group">
+                        <div class="offset-md-2 col-md-10">
+                            <input type="submit" value="Enregistrer" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

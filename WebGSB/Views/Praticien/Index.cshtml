@@ -1,0 +1,66 @@
+﻿@model List<WebGSB.Models.Metier.Praticien>
+
+@{
+    ViewBag.Title = "Liste des Praticiens";
+    Layout = "~/Views/Shared/_LayoutGSB.cshtml";
+}
+
+
+<div class="container">
+    <h1>Liste des Praticiens</h1>
+
+    <div class="search-container">
+        <form method="get" action="@Url.Action("Index", "Praticien")" class="form-inline justify-content-center">
+            <div class="input-group">
+                <input type="text" id="nomRecherche" name="nomRecherche" class="form-control" placeholder="Recherchez un praticien...">
+
+            </div>
+        </form>
+    </div>
+
+
+    <div class="table-container">
+        @if (Model != null && Model.Any())
+        {
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID Praticien</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Code Postal</th>
+                        <th>Ville</th>
+                        <th>Adresse</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var praticien in Model)
+                    {
+                        <tr>
+                            <td><a href="@Url.Action("IndexAc", "Activiter", new { idPraticien = praticien.Id })">@praticien.Id</a></td>
+                            <td>@praticien.Nom</td>
+                            <td>@praticien.Prenom</td>
+                            <td>@praticien.CodePostal</td>
+                            <td>@praticien.Ville</td>
+                            <td>@praticien.Adresse</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Aucun praticien trouvé.</p>
+        }
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6 col-md-offset-3">
+            @Html.ActionLink("Retourner à l'accueil", "Index", "Home", null, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>
+
+
+
+
