@@ -4,11 +4,14 @@ using WebGSB.Models.Metier;
 using WebGSB.Models.MesExceptions;
 using System;
 using System.Collections.Generic;
+using WebGSB.Filters;
 
 namespace WebGSB.Controllers
 {
     public class PraticienController : Controller
     {
+
+        [AuthorizeAdmin]
         public IActionResult Index(string nomRecherche = "") // Ajout du paramètre nomRecherche
         {
             List<Praticien> mesPraticiens = null;

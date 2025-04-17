@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Data;
 using WebGSB.Models.MesExceptions;
+using WebGSB.Models.Utilitaires;
 
 namespace WebGSB.Models.Persistance
 {
@@ -48,6 +49,9 @@ namespace WebGSB.Models.Persistance
                 connexion = null;  // Reset the connection
             }
         }
+
+        
+
 
         public static DataTable Lecture(string requete, Serreurs er)
         {

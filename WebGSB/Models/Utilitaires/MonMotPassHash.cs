@@ -1,105 +1,61 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Linq;
 
 namespace WebGSB.Models.Utilitaires
 {
     public class MonMotPassHash
     {
-        private const int SaltSize = 32;
-
         /// <summary>
-        /// Génère le sel sous forme d'une clé
-        /// </summary>
-        /// <returns></returns>
-
-        public static byte[] GenerateSalt()
-        {
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                var randomNumber = new byte[SaltSize];
-                rng.GetBytes(randomNumber);
-                return randomNumber;
-            }
-        }
-
-        /// <summary>
-        /// hache le mot de passe 
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="salt"></param>
-        /// <returns></returns>
-        public static byte[] ComputeHMAC_SHA256(byte[] data, byte[] salt)
-        {
-            using (var hmac = new HMACSHA256(salt))
-            {
-                return hmac.ComputeHash(data);
-            }
-        }
-        /// <summary>
-        /// Fournit le mot de passe haché
+        /// Hashes a password using SHA256
         /// </summary>
         /// <param name="password"></param>
-        /// <param name="salt"></param>
-        /// <returns></returns>
-
-        public static byte[] PasswordHashe(String password, byte[] salt)
-
+        /// <returns>Hashed password as a byte array</returns>
+        public static byte[] HashPassword(string password)
         {
-            byte[] pwdHash = null;
-            pwdHash = ComputeHMAC_SHA256(Encoding.UTF8.GetBytes(password), salt);
-            return pwdHash;
-
-        }
-
-        /// <summary>
-        /// Vérifie le mot de passe
-        /// On passe un mot de passe en clair et la clé 
-        /// </summary>
-        /// <param name="salt"></param>
-        /// <param name="pwd"></param>
-        /// <param name="pwdh"></param>
-        /// <returns></returns>
-
-        public static Boolean VerifyPassword(byte[] salt, String pwd, byte[] pwdh)
-        {
-
-            byte[] pwdHash = PasswordHashe(pwd, salt);
-            int i = 0;
-            bool egal = true;
-            while (i < pwdHash.Length && egal)
+            using (var sha256 = SHA256.Create())
             {
-                if (pwdHash[i] != pwdh[i])
-                    egal = false;
-                i++;
-
+                return sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
-            return egal;
         }
 
         /// <summary>
-        ///  Cette méthode transforme une chaîne de caractère en bytes
+        /// Verifies a password against a stored hash
         /// </summary>
-
-        public static byte[] transformeEnBytes(string maChaine)
+        /// <param name="inputPassword">Password input by the user</param>
+        /// <param name="storedHash">Stored hashed password</param>
+        /// <returns>True if passwords match, otherwise false</returns>
+        public static bool VerifyPassword(string inputPassword, string storedHash)
         {
-            byte[] bytes = Convert.FromBase64String(maChaine);
+            var inputHash = HashPassword(inputPassword);
+            var storedHashBytes = Convert.FromBase64String(storedHash);
+            return CompareHashes(inputHash, storedHashBytes);
+        }
 
-            return bytes;
+        private static bool CompareHashes(byte[] inputHash, byte[] storedHash)
+        {
+            if (inputHash.Length != storedHash.Length)
+                return false;
 
+            for (int i = 0; i < inputHash.Length; i++)
+            {
+                if (inputHash[i] != storedHash[i])
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>
-        ///  Cette méthode transforme une tableau bytes  en chaîne
+        /// Converts byte array to a base64 string
         /// </summary>
-
-        public static String BytesToString(byte[] monByte)
+        public static string BytesToString(byte[] bytes)
         {
-
-            string str = Convert.ToBase64String(monByte);
-            return str;
+            return Convert.ToBase64String(bytes);
         }
     }
+
 
 
 }

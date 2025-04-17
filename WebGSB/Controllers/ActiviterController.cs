@@ -4,30 +4,31 @@ using WebGSB.Models.Metier;
 using WebGSB.Models.MesExceptions;
 using System;
 using System.Diagnostics;
+using WebGSB.Filters;
 
 namespace WebGSB.Controllers
 {
     public class ActiviterController : Controller
     {
-
+        [AuthorizeAdmin]
         public IActionResult Add()
         {
             return View();
         }
 
         //Ne pas oublier d'afficher la vue sinon la page ne va jamais s'afficher (return la vue avec le nom de la page) 
-
+        [AuthorizeAdmin]
         public IActionResult Modifier()
         {
             return View();
         }
-
+        [AuthorizeAdmin]
         public IActionResult Ajouter()
         {
             return View();
         }
 
-
+        [AuthorizeAdmin]
         public IActionResult IndexAc(int idPraticien)
         {
             var invitations = ServiceActiviter.GetInvitationsParPraticienId(idPraticien);
@@ -42,6 +43,8 @@ namespace WebGSB.Controllers
 
 
 
+
+        [AuthorizeAdmin]
         [HttpGet]
         public IActionResult Add(int praticienId)
         {
@@ -49,12 +52,12 @@ namespace WebGSB.Controllers
             return View(model);
         }
 
-        
 
+
+        [AuthorizeAdmin]
         [HttpPost]
         public IActionResult Add(ActiviteCompl activite)
         {
-            // Log data to verify what is received (You can use Debug.WriteLine or any logging approach)
             Debug.WriteLine($"Received: Date: {activite.DateActivite}, Lieu: {activite.LieuActivite}, Theme: {activite.ThemeActivite}, Motif: {activite.MotifActivite}, PraticienId: {activite.PraticienId}");
 
             if (ModelState.IsValid)
@@ -63,7 +66,7 @@ namespace WebGSB.Controllers
                 {
                     ServiceActiviter.AjouterActivite(activite);
                     TempData["SuccessMessage"] = "Activité ajoutée avec succès.";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Home"); // Assurez-vous que cette redirection est correcte.
                 }
                 catch (Exception e)
                 {
@@ -80,6 +83,8 @@ namespace WebGSB.Controllers
 
 
 
+
+        [AuthorizeAdmin]
         [HttpGet]
         public ActionResult Modifier(int id)
         {
@@ -91,6 +96,8 @@ namespace WebGSB.Controllers
             return View(activite);
         }
 
+
+        [AuthorizeAdmin]
         // POST: Update the activity in the database
         [HttpPost]
         [ValidateAntiForgeryToken] // Ensure this attribute is here to prevent CSRF attacks
@@ -115,7 +122,7 @@ namespace WebGSB.Controllers
 
 
 
-
+        [AuthorizeAdmin]
 
         [HttpPost]
         public IActionResult Supprimer(int id)

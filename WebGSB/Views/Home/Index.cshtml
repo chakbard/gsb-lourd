@@ -3,7 +3,56 @@
     Layout = "~/Views/Shared/_LayoutGSB.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+
+    .hero-section {
+        background: url('/image/index.jpg') no-repeat center center;
+        background-size: cover;
+        color: white;
+        height: 100vh; /* Hauteur ajustée selon vos besoins */
+        display: flex;
+        justify-content: center; /* Centre horizontalement */
+        align-items: center; /* Centre verticalement */
+    }
+
+
+    .feature-section {
+        margin-top: 40px;
+    }
+
+    .feature-item {
+        margin-bottom: 20px;
+    }
+
+    .feature-icon {
+        font-size: 48px;
+        color: #007bff;
+    }
+</style>
+
+<div class="hero-section">
+    <div class="text-center">
+        <h1 class="display-4">Bienvenue dans notre réseau de praticiens</h1>
+        <p>Vous connecter avec les meilleurs professionnels de santé</p>
+    </div>
+</div>
+
+<div class="container feature-section">
+    <div class="row">
+        <div class="col-md-4 text-center feature-item">
+            <i class="fas fa-user-md feature-icon"></i>
+            <h3>Praticiens qualifiés</h3>
+            <p>Découvrez notre équipe hautement qualifiée dédiée à votre santé.</p>
+        </div>
+        <div class="col-md-4 text-center feature-item">
+            <i class="fas fa-calendar-alt feature-icon"></i>
+            <h3>Rendez-vous simplifiés</h3>
+            <p>Réservez facilement vos rendez-vous directement via notre plateforme.</p>
+        </div>
+        <div class="col-md-4 text-center feature-item">
+            <i class="fas fa-heartbeat feature-icon"></i>
+            <h3>Support 24/7</h3>
+            <p>Obtenez de l'aide à tout moment, parce que votre santé compte.</p>
+        </div>
+    </div>
 </div>

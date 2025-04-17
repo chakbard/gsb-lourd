@@ -65,6 +65,7 @@ namespace WebGSB.Models.Dao
         {
             using (var conn = Connexion.getInstance().getConnexion())
             {
+                // Assurez-vous que la connexion est ouverte.
                 if (conn.State != System.Data.ConnectionState.Open)
                 {
                     conn.Open();
@@ -72,38 +73,74 @@ namespace WebGSB.Models.Dao
 
                 using (var transaction = conn.BeginTransaction())
                 {
-                    var cmd = new MySqlCommand("", conn, transaction);
-
-                    cmd.CommandText = "INSERT INTO ACTIVITE_COMPL (date_activite, lieu_activite, theme_activite, motif_activite) VALUES (@dateActivite, @lieuActivite, @themeActivite, @motifActivite);";
-                    cmd.Parameters.AddWithValue("@dateActivite", activite.DateActivite);
-                    cmd.Parameters.AddWithValue("@lieuActivite", activite.LieuActivite);
-                    cmd.Parameters.AddWithValue("@themeActivite", activite.ThemeActivite);
-                    cmd.Parameters.AddWithValue("@motifActivite", activite.MotifActivite);
-                    cmd.ExecuteNonQuery();
-
-                    long activiteId = cmd.LastInsertedId;
-
-                    if (activiteId > 0)
+                    try
                     {
-                        cmd.CommandText = "INSERT INTO inviter (id_activite_compl, id_praticien) VALUES (@activiteId, @praticienId);";
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@activiteId", activiteId);
-                        cmd.Parameters.AddWithValue("@praticienId", activite.PraticienId);
-                        cmd.ExecuteNonQuery();
+                        // Créez une commande pour l'insertion de l'activité.
+                        using (var cmd = new MySqlCommand("", conn, transaction))
+                        {
+                            cmd.CommandText = "INSERT INTO ACTIVITE_COMPL (date_activite, lieu_activite, theme_activite, motif_activite) VALUES (@dateActivite, @lieuActivite, @themeActivite, @motifActivite);";
+                            cmd.Parameters.AddWithValue("@dateActivite", activite.DateActivite);
+                            cmd.Parameters.AddWithValue("@lieuActivite", activite.LieuActivite);
+                            cmd.Parameters.AddWithValue("@themeActivite", activite.ThemeActivite);
+                            cmd.Parameters.AddWithValue("@motifActivite", activite.MotifActivite);
+                            // Insérer l'activité dans la table ACTIVITE_COMPL
+                            cmd.ExecuteNonQuery();
 
-                        transaction.Commit();
+                            // Récupérer l'ID de l'activité insérée en exécutant une nouvelle requête
+                            cmd.CommandText = "SELECT LAST_INSERT_ID();";
+                            long activiteId = (long)cmd.ExecuteScalar();
+
+
+                            // Vérifiez si l'ID de l'activité est valide.
+                            if (activiteId > 0)
+                            {
+                                // Créez une nouvelle commande pour l'insertion dans la table "inviter".
+                                using (var cmdInviter = new MySqlCommand("", conn, transaction))
+                                {
+                                    // Définissez la commande avec la nouvelle requête SQL.
+                                    cmdInviter.CommandText = "INSERT INTO inviter (id_activite_compl, id_praticien) VALUES (@activiteId, @praticienId);";
+
+                                    // Ajoutez les paramètres à la commande.
+                                    cmdInviter.Parameters.AddWithValue("@activiteId", activiteId);
+                                    cmdInviter.Parameters.AddWithValue("@praticienId", activite.PraticienId);
+
+                                    // Exécutez la commande pour insérer dans la table "inviter".
+                                    cmdInviter.ExecuteNonQuery();
+
+
+                                }
+
+                                // Confirmez la transaction si toutes les commandes sont exécutées avec succès.
+                                transaction.Commit();
+                            }
+                            else
+                            {
+                                // Si l'ID de l'activité n'est pas valide, lancez une exception.
+                                throw new Exception("Failed to insert activity: No ID returned");
+                            }
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
+                        // En cas d'erreur, annulez la transaction et lancez une exception avec un message approprié.
                         transaction.Rollback();
-                        throw new Exception("Failed to insert activity: No ID returned");
+                        throw new Exception("Failed to insert activity: " + ex.Message, ex);
+                    }
+                    finally
+                    {
+                        // Assurez-vous que la connexion est correctement fermée.
+                        conn.Close();
                     }
                 }
             }
         }
 
 
-        
+
+
+
+
+
 
 
 
