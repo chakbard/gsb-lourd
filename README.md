@@ -72,7 +72,6 @@ Saisir l’adresse du serveur, par exemple :
 2. Écran de connexion
 Entrez vos identifiants (admin ou médecin)
 
-(1.png)
 
 Redirection vers le tableau de bord
 
