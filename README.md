@@ -39,8 +39,7 @@ L'application facilite le suivi des informations des professionnels de santé po
 
 ## 📦 Installation
 
-1/ git clone https://github.com/sjbl69/projet-gsb2.git
-cd projet-gsb2
+1/ git clone 
 
 2/ Créer la base de données MySQL et configurer la chaîne de connexion dans appsettings.json.
 
@@ -52,8 +51,7 @@ dotnet ef database update
 dotnet run
 
 
-5/ Ouvrir dans un navigateur :
-https://localhost:5001
+5/ Ouvrir dans un navigateur et lancer en local
 
 Projet-GSB/
 ├── Controllers/
@@ -70,8 +68,6 @@ Ouvrir un navigateur
 
 Saisir l’adresse du serveur, par exemple :
 
-http://192.168.1.50 (réseau local)
-Hebergement web lien : 
 
 2. Écran de connexion
 Entrez vos identifiants (admin ou médecin)
